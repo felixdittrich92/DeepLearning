@@ -12,42 +12,47 @@ from plotting import *
 # Dataset
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
-# Cast to np.float32
+# in float32 casten
 x_train = x_train.astype(np.float32)
 y_train = y_train.astype(np.float32)
 x_test = x_test.astype(np.float32)
 y_test = y_test.astype(np.float32)
 
-# Dataset variables
+# Dataset Variablen
 train_size = x_train.shape[0]
 test_size = x_test.shape[0]
 num_features = 784
 num_classes = 10
 
-# Compute the categorical classes
+# erzeugt die kategorischen Klassen
+# selbe wie OneHot Encoding
+# num_classes = 3
+# y_train = [0, 1, 2]
+# Klasse 0 => [1, 0, 0]
+# Klasse 1 => [0, 1, 0] ...
 y_train = to_categorical(y_train, num_classes=10)
 y_test = to_categorical(y_test, num_classes=10)
 
-# Reshape the input data
+# Inputdaten reshapen
 x_train = x_train.reshape(train_size, num_features)
 x_test = x_test.reshape(test_size, num_features)
 
-# Model variables
+# Modell Variablen
 nodes = [num_features, 800, 400, num_classes] # input, hidden, output
 epochs = 50
 
 class Model:
     def __init__(self):
-        # Weights (Matrices)
+        # Weights (Metriken)
         self.W1 = tf.Variable(tf.random.truncated_normal(shape=[nodes[0], nodes[1]], stddev=0.01), name="W1")
         self.W2 = tf.Variable(tf.random.truncated_normal(shape=[nodes[1], nodes[2]], stddev=0.01), name="W2")
         self.W3 = tf.Variable(tf.random.truncated_normal(shape=[nodes[2], nodes[3]], stddev=0.01), name="W3")
-        # Biases (Vectors)
+        # Biases (Vektoren)
         self.b1 = tf.Variable(tf.constant(0.0, shape=[nodes[1]]), name="b1")
         self.b2 = tf.Variable(tf.constant(0.0, shape=[nodes[2]]), name="b2")
         self.b3 = tf.Variable(tf.constant(0.0, shape=[nodes[3]]), name="b3")
         self.variables = [self.W1, self.W2, self.W3, self.b1, self.b2, self.b3]
-        # Model variables
+        # Modell Variablen
         self.learning_rate = 0.001
         self.optimizer = tf.optimizers.Adam(learning_rate=self.learning_rate)
         self.loss_fn = tf.losses.CategoricalCrossentropy()
@@ -57,6 +62,7 @@ class Model:
     def get_variables(self):
         return {var.name: var.numpy() for var in self.variables}
     
+    # Anzahl der Gewichte 
     def get_num_trainable_parameters(self, nodes):
         num_weights = 0
         num_biases = 0
@@ -109,28 +115,28 @@ class Model:
         return metric_val
     
     def fit(self, x_train, y_train, x_test, y_test, epochs=10):
-        # create empty lists to save the loss and metric values
+        # leere Liste erstellen für Loss und Metriken
         train_losses, train_metrics = [], []
         test_losses, test_metrics = [], []
         # iterate over the number of epochs
         for epoch in range(epochs):
-            # compute the loss and the metric value for the train set
+            # Loss und Metriken berechenen - Trainingsset
             train_loss = self.update_variables(x_train, y_train).numpy()
             train_metric = self.compute_metrics(x_train, y_train).numpy()
             train_losses.append(train_loss)
             train_metrics.append(train_metric)
-            # compute the loss and the metric value for the test set
+            # Loss und Metriken berechenen - Testset
             test_loss = self.loss(self.predict(x_test), y_test).numpy()
             test_metric = self.compute_metrics(x_test, y_test).numpy()
             test_losses.append(test_loss)
             test_metrics.append(test_metric)
-            # Print metrics
+
             print("Epoch: ", epoch+1, " of ", epochs,
                     " - Train Loss: ", round(train_loss, 4),
                     " - Train Metric: ", round(train_metric, 4),
                     " - Test Loss: ", round(test_loss, 4),
                     " - Test Metric: ", round(test_metric, 4))
-        # Visualization of the loss and metric values
+        # Visualisierung Loss und Metriken
         display_convergence_error(train_losses, test_losses)
         display_convergence_acc(train_metrics, test_metrics)
         
