@@ -1,7 +1,7 @@
 # Gradientenabstiegsverfahren = Backpropagation
 # tastet sich anhand einer angegebenen Lernrate bis zum globalen Minimum 
 # am Ende jeder Epoche wird die Lernrate angepasst geregelt durch Optimizer
-# Optimizer : Adam ist vorzugsweise am schnellsten
+# Optimizer : Adam ist vorzugsweise am schnellsten - Algorithmus der sich bis zum Minimum "bewegt"
 
 import matplotlib.pyplot as plt
 import numpy as np
