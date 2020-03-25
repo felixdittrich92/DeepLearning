@@ -11,7 +11,6 @@ from tensorflow.keras.models import *
 from tensorflow.keras.optimizers import *
 from tensorflow.keras.initializers import *
 
-from plotting import *
 
 # Dataset
 (x_train, y_train), (x_test, y_test) = boston_housing.load_data()
