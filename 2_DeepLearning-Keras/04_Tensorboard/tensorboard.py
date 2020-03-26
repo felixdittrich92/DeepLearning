@@ -9,7 +9,10 @@ from tensorflow.keras.activations import *
 from tensorflow.keras.models import *
 from tensorflow.keras.optimizers import *
 from tensorflow.keras.initializers import *
+from tensorflow.keras.callbacks import *   # für Tensorboard
 
+# Log erstellen/speichern
+dir_path = os.path.abspath("../DeepLearning/logs") # Linux und Windows
 
 # Dataset
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -22,7 +25,7 @@ y_test = y_test.astype(np.float32)
 
 # Dataset Variablen
 train_size = x_train.shape[0]
-xxtest_size = x_test.shape[0]
+test_size = x_test.shape[0]
 num_features = 784 # 28x28
 num_classes = 10
 
@@ -39,7 +42,7 @@ init_w = TruncatedNormal(mean=0.0, stddev=0.01)
 init_b = Constant(value=0.0)
 lr = 0.001
 optimizer = Adam(lr=lr)
-epochs = 1000
+epochs = 20
 batch_size = 256 # [32, 1024]  Werte dazwischen gibt an wieviele Datenpunkte parrallel verwendet werden zum trainieren
 
 # Modell definieren
@@ -64,12 +67,19 @@ model.compile(
     optimizer=optimizer,
     metrics=["accuracy"])
 
+# Tensorboard Callback
+tb = TensorBoard(
+    log_dir=dir_path,
+    histogram_freq=1,  # jede Epoche 2 = alle 2 Epochen etc.
+    write_graph=True)
+
 model.fit(
     x=x_train, 
     y=y_train, 
     epochs=epochs,
     batch_size=batch_size,
-    validation_data=[x_test, y_test])
+    validation_data=[x_test, y_test],
+    callbacks=[tb]) # benötigt für Tensorboard
 
 score = model.evaluate(
     x_test, 

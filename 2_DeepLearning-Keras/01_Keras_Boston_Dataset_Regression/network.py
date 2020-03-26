@@ -41,7 +41,7 @@ init_w = RandomUniform(minval=-1.0, maxval=1.0)
 init_b = Constant(value=0.0)
 lr = 0.005
 optimizer = Adam(lr=lr)
-epochs = 10
+epochs = 1000
 batch_size = 512
 
 # DNN definieren
@@ -52,15 +52,18 @@ model.add(Dense(units=num_targets, kernel_initializer=init_w, bias_initializer=i
 model.summary()
 
 # Modell kompilieren, trainieren und evaluieren
+# Netz vorbereiten
 model.compile(
     loss="mse",
     optimizer=optimizer,
     metrics=[r_squared])
+# Netz trainieren
 model.fit(
     x=x_train, 
     y=y_train, 
     epochs=epochs,
     batch_size=batch_size,
     validation_data=[x_test, y_test])
+# Netz auswerten
 score = model.evaluate(x_test, y_test, verbose=0)
 print("Score: ", score)
