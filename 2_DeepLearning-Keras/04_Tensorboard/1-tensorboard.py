@@ -86,3 +86,8 @@ score = model.evaluate(
     y_test, 
     verbose=0)
 print("Score: ", score)
+
+
+# USE: in Konsole tensorboard --logdir LOGSORDNER
+
+# mehrere Modelle vergleichen -> für jedes Modell in Logs Unterordner erstellen und mit Tensorboard den Oberordner angeben

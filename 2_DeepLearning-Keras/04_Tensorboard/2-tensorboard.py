@@ -9,7 +9,12 @@ from tensorflow.keras.activations import *
 from tensorflow.keras.models import *
 from tensorflow.keras.optimizers import *
 from tensorflow.keras.initializers import *
+from tensorflow.keras.callbacks import *   # für Tensorboard
 
+from plotting import *
+
+# Log erstellen/speichern
+dir_path = os.path.abspath("../DeepLearning/logs") # Linux und Windows
 
 # Dataset
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -22,7 +27,7 @@ y_test = y_test.astype(np.float32)
 
 # Dataset Variablen
 train_size = x_train.shape[0]
-xxtest_size = x_test.shape[0]
+test_size = x_test.shape[0]
 num_features = 784 # 28x28
 num_classes = 10
 
@@ -39,28 +44,23 @@ init_w = TruncatedNormal(mean=0.0, stddev=0.01)
 init_b = Constant(value=0.0)
 lr = 0.001
 optimizer = Adam(lr=lr)
-epochs = 1000
+epochs = 20
 batch_size = 256 # [32, 1024]  Werte dazwischen gibt an wieviele Datenpunkte parrallel verwendet werden zum trainieren
 
 # Modell definieren
 model = Sequential()
 
-# Input Layer
 model.add(Dense(units=500, kernel_initializer=init_w, bias_initializer=init_b, input_shape=(num_features, )))
 model.add(Activation("relu"))
 
-# Hidden 1
 model.add(Dense(units=300, kernel_initializer=init_w, bias_initializer=init_b))
 model.add(Activation("relu"))
 
-# Hidden 2
 model.add(Dense(units=100, kernel_initializer=init_w, bias_initializer=init_b))
 model.add(Activation("relu"))
 
-# Output Layer
 model.add(Dense(units=num_classes, kernel_initializer=init_w, bias_initializer=init_b))
 model.add(Activation("softmax"))
-# Zusammenfassung
 model.summary()
 
 # Modell kompilieren, trainieren und evaluieren
@@ -69,15 +69,37 @@ model.compile(
     optimizer=optimizer,
     metrics=["accuracy"])
 
+# Tensorboard Callback
+tb = TensorBoard(
+    log_dir=dir_path,
+    histogram_freq=1,  # jede Epoche 2 = alle 2 Epochen etc.
+    write_graph=True)
+
+# ConfusionMatrix als Bild mit an Tensorboard übergeben
+classes_list = [i for i in range(num_classes)]
+confusion_matrix = ConfusionMatrix(
+    model,
+    x_test,
+    y_test,
+    classes_list=classes_list,
+    log_dir=dir_path
+)
+
 model.fit(
     x=x_train, 
     y=y_train, 
     epochs=epochs,
     batch_size=batch_size,
-    validation_data=[x_test, y_test])
+    validation_data=[x_test, y_test],
+    callbacks=[tb, confusion_matrix]) # benötigt für Tensorboard
 
 score = model.evaluate(
     x_test, 
     y_test, 
     verbose=0)
 print("Score: ", score)
+
+
+# USE: in Konsole tensorboard --logdir LOGSORDNER
+
+# mehrere Modelle vergleichen -> für jedes Modell in Logs Unterordner erstellen und mit Tensorboard den Oberordner angeben
