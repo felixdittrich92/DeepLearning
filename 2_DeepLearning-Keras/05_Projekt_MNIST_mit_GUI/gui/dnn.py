@@ -42,7 +42,7 @@ def create_model():
         metrics=["accuracy"])
     return model
 
-global model
+global model # create model one times 
 model = create_model()
 if os.path.exists(MODEL_PATH):
     model.load_weights(MODEL_PATH)
