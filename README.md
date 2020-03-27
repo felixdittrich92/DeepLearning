@@ -1,3 +1,3 @@
 # DeepLearning
 
-My Repo for DeepLearning things
+My Repo for DeepLearning things --in progress
