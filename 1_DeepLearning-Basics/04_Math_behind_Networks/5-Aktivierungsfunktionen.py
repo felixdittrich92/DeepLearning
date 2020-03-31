@@ -1,3 +1,7 @@
+''' 
+Die Aktivierungsfunktion soll den Output bestmöglich an die eingegebene Funktion anpassen
+'''
+
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -36,9 +40,9 @@ y_pred_relu = model.predict(x)
 
 model = Sequential()
 model.add(Dense(500)) # Input zu Hidden
-model.add(Activation("sigmoid")) # ReLU vom Hidden
+model.add(Activation("sigmoid")) # Sigmoid vom Hidden
 model.add(Dense(500)) # Input zu Hidden
-model.add(Activation("sigmoid")) # ReLU vom Hidden
+model.add(Activation("sigmoid")) # Sigmoid vom Hidden
 model.add(Dense(1)) # Vom Hidden zum Output
 model.compile(optimizer=Adam(lr=1e-2), loss="mse")
 model.fit(x, y, epochs=30)

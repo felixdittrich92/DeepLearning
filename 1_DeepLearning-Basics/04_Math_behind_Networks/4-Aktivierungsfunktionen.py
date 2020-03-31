@@ -23,12 +23,16 @@ model.add(Dense(1)) # Vom Hidden zum Output
 model.compile(optimizer=Adam(lr=5e-2), loss="mse")
 model.fit(x, y, epochs=20)
 
-W, b = model.layers[0].get_weights()
-W2, b2 = model.layers[2].get_weights()
+# Gewichte aus dem Netz holen
+W, b = model.layers[0].get_weights() # Dense 1
+W2, b2 = model.layers[2].get_weights() # Dense 2
+
+# in Vektorform "ausrollen"
 W = W.flatten()
 W2 = W2.flatten()
 b = b.flatten()
 b2 = b2.flatten()
+
 print(W.shape, b.shape)
 print(W2.shape, b2.shape)
 
