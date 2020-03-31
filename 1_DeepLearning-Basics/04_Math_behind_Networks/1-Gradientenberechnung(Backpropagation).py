@@ -1,5 +1,29 @@
 '''
-siehe Gradientenberechnung.png
+siehe Gradientenberechnung(Backpropagation).png
+
+Forward:
+
+X - Input
+W - Weights
+b - Bias
+U - next Weights
+c - next Bias
+y - result (bzw. eigentliches Ergebnis)
+
+Knoten vom + zum - ist die Prediction
+y -> - -> hoch 2 ist MSE (Lossfunktion)
+berechnet den "Verlust" zwischen der Prediction und dem eigentlichen y (Ergebniswert)
+
+1. W * x + b = signal
+2. z = relu(signal)
+3. predicted y = U * z + c
+
+Gewichte optimieren:
+
+Backpropagation - Berechnung wird durch den Optimizer angegeben
+(Adam, SGD, ...)
+Dabei wird vom Ende des Graphen bis zu den Gewichten (rückwärts) partiel abgeleitet
+
 '''
 
 import os
@@ -61,7 +85,9 @@ model.fit(
     validation_data=[x_test, y_test],
     callbacks=[tb])
 
-model.layers[0].set_weights([np.array([[-0.250], [1.000]]), np.array([0.100])])
+# feste Weights (W) setzen und 0.100 als Bias (b)
+model.layers[0].set_weights([np.array([[-0.250], [1.000]]), np.array([0.100])]) 
+# feste Weights (U) setzen und 0.125 als Bias (c)
 model.layers[2].set_weights([np.array([[1.250]]), np.array([0.125])]) 
 
 ##################
