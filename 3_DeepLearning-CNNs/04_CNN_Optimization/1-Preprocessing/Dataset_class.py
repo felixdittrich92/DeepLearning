@@ -47,7 +47,7 @@ if __name__ == "__main__":
     mnist = MNIST()
 
     x_train, y_train = mnist.get_train_set()
-    print(np.max(x_train))
-    print(np.min(x_train))
-    print(np.mean(x_train))
-    print(np.std(x_train))
+    print(np.max(x_train)) # 255 weiß
+    print(np.min(x_train)) # 0 schwarz
+    print(np.mean(x_train)) # Mittelwert
+    print(np.std(x_train)) #
