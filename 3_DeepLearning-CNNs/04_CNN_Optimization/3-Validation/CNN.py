@@ -73,6 +73,7 @@ model.fit(
     epochs=epochs,
     batch_size=batch_size)
 
+# erst wenn das Netz final ist
 score = model.evaluate(
     x_test, 
     y_test, 

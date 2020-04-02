@@ -1,12 +1,10 @@
+'''
+"automatische" Optimierung der Hyperparameter mit festen Werten
+'''
+
 import os
 
-import random
-random.seed(0)
-
-import numpy as np
-np.random.seed(0)
-
-from sklearn.model_selection import RandomizedSearchCV, ParameterSampler
+from sklearn.model_selection import GridSearchCV, ParameterGrid
 
 from tensorflow.keras.layers import *
 from tensorflow.keras.activations import *
@@ -26,7 +24,7 @@ x_test, y_test = mnist.get_test_set()
 num_classes = mnist.num_classes
 
 def model_fn(optimizer, learning_rate):
-    # Define the DNN
+    # Define the CNN
     input_img = Input(shape=x_train.shape[1:])
 
     x = Conv2D(filters=32, kernel_size=3, padding='same')(input_img)
@@ -63,15 +61,22 @@ def model_fn(optimizer, learning_rate):
         metrics=["accuracy"])
     return model
 
+# Wahl der Hyperparameter die getestet werden sollen / es werden "alle mit allen" getestet
 epochs = 3
 batch_size = 128
 optimizer_candidates = [Adam, RMSprop]
-lr_candidates = [random.uniform(1e-4, 1e-3) for _ in range(100)]
+lr_candidates = [1e-3, 5e-3, 1e-4]
 
-param_distributions = {
+# Parameter 
+param_grid = {
     "optimizer": optimizer_candidates,
     "learning_rate": lr_candidates,
 }
+
+# Grid erstellen
+grid = ParameterGrid(param_grid)
+for comb in grid:
+    print(comb)
 
 keras_clf = KerasClassifier(
     build_fn=model_fn,
@@ -79,22 +84,22 @@ keras_clf = KerasClassifier(
     batch_size=batch_size,
     verbose=0)
 
-rand_cv = RandomizedSearchCV(
+# GridSearch 
+grid_cv = GridSearchCV(
     estimator=keras_clf,
-    param_distributions=param_distributions,
-    n_iter=4,
+    param_grid=param_grid,
     n_jobs=1,
     verbose=0,
     cv=3)
 
-rand_result = rand_cv.fit(x_train, y_train)
+grid_result = grid_cv.fit(x_train, y_train)
 
 # Summary
-print("Best: %f using %s" % (rand_result.best_score_, rand_result.best_params_))
+print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
 
-means = rand_result.cv_results_["mean_test_score"]
-stds = rand_result.cv_results_["std_test_score"]
-params = rand_result.cv_results_["params"]
+means = grid_result.cv_results_["mean_test_score"]
+stds = grid_result.cv_results_["std_test_score"]
+params = grid_result.cv_results_["params"]
 
 for mean, std, param in zip(means, stds, params):
     print("Acc: %f (+/- %f) with: %r" % (mean, std, param))

@@ -1,3 +1,10 @@
+'''
+Validation: die Trainingsdaten aufsplitten in Trainings und Validierungsdaten
+um die Genauigkeit bzw. Leistung des Netzwerkes zu testen ,da das Netz erst 
+am Ende mit den Originaldaten (y) getestet werden sollte.
+-> Evaluierung erst mit dem finalen Netz durchführen
+'''
+
 import numpy as np
 
 from sklearn.preprocessing import MinMaxScaler

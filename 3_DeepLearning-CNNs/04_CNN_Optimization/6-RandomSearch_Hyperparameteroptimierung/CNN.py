@@ -1,6 +1,13 @@
-import os
+'''
+"automatische" Optimierung der Hyperparameter mit Werten im Intervall von bis
+'''
 
-from sklearn.model_selection import GridSearchCV, ParameterGrid
+import os
+import random
+
+import numpy as np
+
+from sklearn.model_selection import RandomizedSearchCV, ParameterSampler
 
 from tensorflow.keras.layers import *
 from tensorflow.keras.activations import *
@@ -57,19 +64,17 @@ def model_fn(optimizer, learning_rate):
         metrics=["accuracy"])
     return model
 
+# Wahl der Hyperparameter die getestet werden sollen / es werden "alle mit allen" getestet
 epochs = 3
 batch_size = 128
 optimizer_candidates = [Adam, RMSprop]
-lr_candidates = [1e-3, 5e-3, 1e-4]
+lr_candidates = [random.uniform(1e-4, 1e-3) for _ in range(100)]
 
-param_grid = {
+# Parameter
+param_distributions = {
     "optimizer": optimizer_candidates,
     "learning_rate": lr_candidates,
 }
-
-grid = ParameterGrid(param_grid)
-for comb in grid:
-    print(comb)
 
 keras_clf = KerasClassifier(
     build_fn=model_fn,
@@ -77,21 +82,23 @@ keras_clf = KerasClassifier(
     batch_size=batch_size,
     verbose=0)
 
-grid_cv = GridSearchCV(
+# RandomSearch
+rand_cv = RandomizedSearchCV(
     estimator=keras_clf,
-    param_grid=param_grid,
+    param_distributions=param_distributions,
+    n_iter=4,
     n_jobs=1,
     verbose=0,
     cv=3)
 
-grid_result = grid_cv.fit(x_train, y_train)
+rand_result = rand_cv.fit(x_train, y_train)
 
 # Summary
-print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
+print("Best: %f using %s" % (rand_result.best_score_, rand_result.best_params_))
 
-means = grid_result.cv_results_["mean_test_score"]
-stds = grid_result.cv_results_["std_test_score"]
-params = grid_result.cv_results_["params"]
+means = rand_result.cv_results_["mean_test_score"]
+stds = rand_result.cv_results_["std_test_score"]
+params = rand_result.cv_results_["params"]
 
 for mean, std, param in zip(means, stds, params):
     print("Acc: %f (+/- %f) with: %r" % (mean, std, param))

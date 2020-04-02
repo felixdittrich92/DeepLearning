@@ -1,4 +1,20 @@
+'''
+Cross-Validation: Kreuzvalidierung teilt die Trainingsdaten in Validierungs und Trainingsdaten
+auf und verschiebt dabei k mal die Validierungsdaten 
+Bsp.: k = 5 
+k=1 ersten 20 % Validierung
+k=2 zweiten 20 % Validierung
+k=3 dritten 20 % Validierung
+k=4 vierten 20 % Validierung
+k=5 fünften 20 % Validierung
+
+trainiert das Netz dementsprechend 5 mal um den besten Wert zu finden (kann sehr zeitintensiv werden)
+Bsp.: wenn man 5 Modelle hat -> 5x5x Zeit die das Modell zum trainieren braucht
+'''
+
+
 import os
+import numpy as np
 
 from sklearn.model_selection import cross_val_score
 
@@ -75,8 +91,10 @@ scores = cross_val_score(
     estimator=keras_clf,
     X=x_train,
     y=y_train,
-    cv=3,
-    n_jobs=1)
+    cv=3, # 3 Teilungen des Trainingssets in (Training und Validierung)
+    n_jobs=1) # nur ein Modell , nicht parallel trainieren
 
+# Werte der 3 Modelle
 print("Score list: ", scores)
+# Mittelwert der 3 Modelle und die Abweichung
 print("Mean Acc: %0.6f (+/- %0.6f)" % (np.mean(scores), np.std(scores)*2))

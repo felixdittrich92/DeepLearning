@@ -1,3 +1,10 @@
+'''
+Preprocessing sollte auf Daten immer angewandt werden, da es nur bessere Ergebnisse liefern kann.
+wird nur auf die Trainingsdaten angewandt - wenn das Netz auf neue unbekannte Daten
+angewandt wird müssen diese davor auch preprocessing durchlaufen, da das Netz die Daten sonst nicht einordnen kann.
+'''
+
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -30,11 +37,17 @@ class MNIST:
         self.y_train = to_categorical(self.y_train, num_classes=self.num_classes)
         self.y_test = to_categorical(self.y_test, num_classes=self.num_classes)
         # Preprocess the data
+        # MinMaxScaler [0, 255] => [0.0, 1.0]
+        # StandardScaler [0, 255] => mean=0, std=1     std-Standardabweichung
         self.scaler = StandardScaler()
-        self.scaler.fit(self.x_train.reshape(self.train_size, 784))
+        self.scaler.fit(self.x_train.reshape(self.train_size, 784)) 
+        # Mittelwert abziehen und durch Standarabweichung teilen
         self.x_train = self.scaler.transform(self.x_train.reshape(self.train_size, 784))
+        #print(self.x_train)
         self.x_test = self.scaler.transform(self.x_test.reshape(self.test_size, 784))
+        # Reshapen da das Netz die Daten im Vektorformat benötigt
         self.x_train = self.x_train.reshape((self.train_size, self.width, self.height, self.depth))
+        #print(self.x_train)
         self.x_test = self.x_test.reshape((self.test_size, self.width, self.height, self.depth))
 
     def get_train_set(self):

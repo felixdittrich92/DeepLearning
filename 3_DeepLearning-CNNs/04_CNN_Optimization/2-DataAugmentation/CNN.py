@@ -7,7 +7,7 @@ from tensorflow.keras.optimizers import *
 from tensorflow.keras.initializers import *
 from tensorflow.keras.callbacks import *
 
-from Dataset_class import *
+from Dataset_class import MNIST
 
 mnist = MNIST()
 mnist.data_augmentation(augment_size=10000)
