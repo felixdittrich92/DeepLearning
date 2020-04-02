@@ -13,14 +13,14 @@ from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 # Dataset : https://www.microsoft.com/en-us/download/details.aspx?id=54765
-FILE_DIR = os.path.abspath("......") # path to folder with dogs cats Dataset
+FILE_DIR = os.path.abspath("../DeepLearning/data/PetImages") # path to folder with dogs cats Dataset
 IMG_WIDTH = 64
 IMG_HEIGHT = 64
 IMG_DEPTH = 3
 
 def extract_cats_vs_dogs():
-    cats_dir = os.path.join(FILE_DIR, "cat")
-    dogs_dir = os.path.join(FILE_DIR, "dog")
+    cats_dir = os.path.join(FILE_DIR, "Cat")
+    dogs_dir = os.path.join(FILE_DIR, "Dog")
 
     print("Deleting no .jpg images!")
     for f in os.listdir(cats_dir):
@@ -60,7 +60,7 @@ def extract_cats_vs_dogs():
             img = cv2.imread(img_file, cv2.IMREAD_COLOR)
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             x[cnt] = transform.resize(img, (IMG_WIDTH, IMG_HEIGHT, IMG_DEPTH))
-            y[cnt] = 0
+            y[cnt] = 1
             cnt += 1
         except:
             print("Dog image %s cannot be read!" % f)

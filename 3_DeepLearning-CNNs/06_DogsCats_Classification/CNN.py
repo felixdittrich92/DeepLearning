@@ -12,7 +12,6 @@ from tensorflow.keras.optimizers import *
 from tensorflow.keras.initializers import *
 from tensorflow.keras.callbacks import *
 
-from plotting import *
 from Dataset_class import DOGSCATS
 
 data = DOGSCATS()
