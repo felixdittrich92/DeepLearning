@@ -1,3 +1,4 @@
+# Aktivierungsfunktionen und Gewichte initialisieren
 # ReLU, GlorotNormal
 Test performance:  [0.7723388218813094, 0.83991253]
 # ReLU, RandomNormal
@@ -10,6 +11,8 @@ Test performance:  [0.8773047265806074, 0.84537834]
 Test performance:  [1.024208527672382, 0.8688206]
 # ELU, GlorotUniform
 Test performance:  [1.3764146850043364, 0.77310824]
+
+# + Regularisierung und Callback
 # LeakyReLU, GlorotUniform
 Test performance:  [1.162869258232747, 0.8344467]
 # ReLU, GlorotUniform, Dropout=0.0, BatchNorm=True
@@ -22,6 +25,8 @@ Test performance:  [0.4626723082556725, 0.9087817]
 Test performance:  [0.5035442909159985, 0.9120612]
 # ReLU, GlorotUniform, Dropout=0.0, BatchNorm=True, LRPL2
 Test performance:  [0.45570962834181566, 0.904652]
+
+# + GlobalAveragePooling und zusätzlichen Dense Layer
 # Flatten, Dense
 Total params: 2,685,218
 Test performance:  [0.45570962834181566, 0.904652]
