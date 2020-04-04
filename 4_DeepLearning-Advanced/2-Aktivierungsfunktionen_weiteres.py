@@ -1,7 +1,7 @@
 '''
-setzen des kernel_initializer und bias_initializer für die Conv2D Layer
--> verändern lohnt sich meistens nicht deshalb -> default Parameter nutzen
+Test einer anderen Aktivierungsfunktion -> meistens ist ReLU am besten
 '''
+
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 
@@ -29,37 +29,60 @@ num_classes = data.num_classes
 # Define the CNN
 def model_fn(optimizer, learning_rate, filter_block1, kernel_size_block1, filter_block2, 
              kernel_size_block2, filter_block3, kernel_size_block3, dense_layer_size,
-             kernel_initializer, bias_initializer):
+             kernel_initializer, bias_initializer, activation_str):
     # Input
     input_img = Input(shape=x_train.shape[1:])
     # Conv Block 1
     x = Conv2D(filters=filter_block1, kernel_size=kernel_size_block1, padding='same',
                kernel_initializer=kernel_initializer, bias_initializer=bias_initializer)(input_img)
-    x = Activation("relu")(x)
+    if activation_str == "LeakyReLU":
+        x = LeakyReLU()(x)
+    else:
+        x = Activation(activation_str)(x)
     x = Conv2D(filters=filter_block1, kernel_size=kernel_size_block1, padding='same',
                kernel_initializer=kernel_initializer, bias_initializer=bias_initializer)(x)
-    x = Activation("relu")(x)
+    if activation_str == "LeakyReLU":
+        x = LeakyReLU()(x)
+    else:
+        x = Activation(activation_str)(x)
     x = MaxPool2D()(x)
     # Conv Block 2
     x = Conv2D(filters=filter_block2, kernel_size=kernel_size_block2, padding='same',
                kernel_initializer=kernel_initializer, bias_initializer=bias_initializer)(x)
-    x = Activation("relu")(x)
+    if activation_str == "LeakyReLU":
+        x = LeakyReLU()(x)
+    else:
+        x = Activation(activation_str)(x)
     x = Conv2D(filters=filter_block2, kernel_size=kernel_size_block2, padding='same',
                kernel_initializer=kernel_initializer, bias_initializer=bias_initializer)(x)
-    x = Activation("relu")(x)
+    if activation_str == "LeakyReLU":
+        x = LeakyReLU()(x)
+    else:
+        x = Activation(activation_str)(x)
     x = MaxPool2D()(x)
     # Conv Block 3
     x = Conv2D(filters=filter_block3, kernel_size=kernel_size_block3, padding='same',
                kernel_initializer=kernel_initializer, bias_initializer=bias_initializer)(x)
-    x = Activation("relu")(x)
+    if activation_str == "LeakyReLU":
+        x = LeakyReLU()(x)
+    else:
+        x = Activation(activation_str)(x)
     x = Conv2D(filters=filter_block3, kernel_size=kernel_size_block3, padding='same',
                kernel_initializer=kernel_initializer, bias_initializer=bias_initializer)(x)
-    x = Activation("relu")(x)
+    if activation_str == "LeakyReLU":
+        x = LeakyReLU()(x)
+    else:
+        x = Activation(activation_str)(x)
     x = MaxPool2D()(x)
     # Dense Part
     x = Flatten()(x)
     x = Dense(units=dense_layer_size)(x)
-    x = Activation("relu")(x)
+
+    if activation_str == "LeakyReLU":
+        x = LeakyReLU()(x)
+    else:
+        x = Activation(activation_str)(x)
+
     x = Dense(units=num_classes)(x)
     y_pred = Activation("softmax")(x)
 
@@ -73,7 +96,7 @@ def model_fn(optimizer, learning_rate, filter_block1, kernel_size_block1, filter
     return model
 
 # Global params
-epochs = 20
+epochs = 40
 batch_size = 256
 
 optimizer = Adam
@@ -86,12 +109,14 @@ filter_block3 = 128
 kernel_size_block3 = 3
 dense_layer_size = 512
 # GlorotUniform, GlorotNormal, RandomNormal, RandomUniform, VarianceScaling
-kernel_initializer = 'GlorotUniform' # default-Wert 
-bias_initializer = 'zeros' # default-Wert
+kernel_initializer = 'GlorotUniform'
+bias_initializer = 'zeros'
+# relu, elu, LeakyReLU
+activation_str = "LeakyReLU"
 
 rand_model = model_fn(optimizer, learning_rate, filter_block1, kernel_size_block1, filter_block2, 
                       kernel_size_block2, filter_block3, kernel_size_block3, dense_layer_size,
-                      kernel_initializer, bias_initializer)
+                      kernel_initializer, bias_initializer, activation_str)
 
 rand_model.fit(
     x=x_train_splitted, 
