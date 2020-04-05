@@ -1,5 +1,7 @@
 import os
 
+import seaborn as sns
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -56,3 +58,8 @@ model.fit(
     validation_data=[x_test, y_test])
 score = model.evaluate(x_test, y_test, verbose=0)
 print("Score: ", score)
+
+y_pred = model.predict(x_test)
+
+sns.residplot(y_test, y_pred, scatter_kws={"s": 2, "alpha": 0.5})
+plt.show()
