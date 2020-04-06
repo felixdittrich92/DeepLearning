@@ -1,3 +1,10 @@
+'''
+Embedding Layer: 
+wird verwendet um Wörter besser darzustellen -> erstellt Vektoren um Wörter besser zu beschreiben
+quasi preprocessing für Wörter
+https://towardsdatascience.com/introduction-to-word-embedding-and-word2vec-652d0c2060fa
+'''
+
 import os
 
 import numpy as np
