@@ -1,5 +1,11 @@
 '''
 siehe Bilder in diesem Ordner
+F: Forget Gate -> welche vorherigen Informationen werden verworfen
+I: Input Gate -> welche neuen Informationen sind wichtig
+O: Output Gate -> welche Informationen werden intern im Cell State gespeichert
+C: Candidate State -> welche Informationen werden intern dem Cell State (c) hinzugefügt
+
+h: Hidden State -> Ausgabe der LSTM(Long Short Term Memory) in dem aktuellen Zeitschritt
 
 einmal Keras Implementierung und eigene Implementierung
 '''

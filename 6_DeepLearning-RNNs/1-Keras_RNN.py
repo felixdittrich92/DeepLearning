@@ -82,7 +82,7 @@ model.compile(loss="mse", optimizer="Adam")
 
 # Implementation without Keras
 rnn = SimpleRNNInference(rnn_layer=model.layers[0], return_sequences=return_sequences)
-output_rnn_own = rnn(x[0]) # 10.5 aufrufen der call Funktion
+output_rnn_own = rnn(x[0]) # 10.5 aufrufen der call Methode
 print(output_rnn_own)
 print("\n\n")
 output_rnn_tf = model.predict(x[[0]])
