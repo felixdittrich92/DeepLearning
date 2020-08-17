@@ -14,8 +14,8 @@ from Generator import *
 from Discriminator import *
 from Dataset_class import MNIST
 
-# GAN Model class
-class GAN():
+# DCGAN Model class
+class DCGAN():
     def __init__(self):
         # Model parameters
         self.img_rows = 28 
@@ -90,10 +90,10 @@ class GAN():
                 axs[i,j].imshow(gen_imgs[cnt, :,:,0], cmap='gray')
                 axs[i,j].axis('off')
                 cnt += 1
-        fig.savefig("/root/Desktop/DeepLearning/7_DeepLearning-GANs/01_GAN/images/%d.png" % epoch)
+        fig.savefig("/root/Desktop/DeepLearning/7_DeepLearning-GANs/02_DCGAN/images/%d.png" % epoch)
         plt.close()
 
 
 if __name__ == '__main__':
-    gan = GAN()
-    gan.train(epochs=200000, batch_size=32, sample_interval=1000)
+    dcgan = GAN()
+    dcgan.train(epochs=200000, batch_size=32, sample_interval=1000)
