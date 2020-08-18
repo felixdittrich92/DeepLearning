@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "/root/anaconda3/bin/python",
+    "python.pythonPath": "/home/felix/anaconda3/bin/python",
     
     "python.linting.pylintArgs": [ 
         "--max-line-length=80",
