@@ -1,18 +1,22 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import tensorflow as tf
+
+# fix CuDnn problem
+gpus = tf.config.experimental.list_physical_devices('GPU')
+if gpus:
+  try:
+    tf.config.experimental.set_virtual_device_configuration(gpus[0], [tf.config.experimental.VirtualDeviceConfiguration(memory_limit=4096)])
+  except RuntimeError as e:
+    print(e)
 
 from tensorflow.keras.layers import *
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import *
 
-### Bug-Fix for TensorFlow 2
-def _check_trainable_weights_consistency(self):
-    return
-Model._check_trainable_weights_consistency = _check_trainable_weights_consistency
-
-from cifarDcganGenerator import *
-from cifarDcganDiscriminator import *
-from cifarData import *
+from Generator import *
+from Discriminator import *
+from Cifar_Data import *
 
 # DCGAN Model Class
 class DCGAN():
@@ -85,7 +89,7 @@ class DCGAN():
                 axs[i,j].imshow(gen_imgs[cnt, :,:])
                 axs[i,j].axis('off')
                 cnt += 1
-        fig.savefig(IMAGES_PATH + "/%d.png" % epoch)
+        fig.savefig("/home/felix/Desktop/DeepLearning/7_DeepLearning-GANs/02_DCGAN/CIFAR10/images/%d.png" % epoch)
         plt.close()
 
 if __name__ == '__main__':

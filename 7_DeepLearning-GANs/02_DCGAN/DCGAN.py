@@ -100,7 +100,7 @@ class DCGAN():
                 axs[i,j].imshow(gen_imgs[cnt, :,:,0], cmap='gray')
                 axs[i,j].axis('off')
                 cnt += 1
-        fig.savefig("/root/Desktop/DeepLearning/7_DeepLearning-GANs/02_DCGAN/images/%d.png" % epoch)
+        fig.savefig("/home/felix/Desktop/DeepLearning/7_DeepLearning-GANs/02_DCGAN/images/%d.png" % epoch)
         plt.close()
 
 
