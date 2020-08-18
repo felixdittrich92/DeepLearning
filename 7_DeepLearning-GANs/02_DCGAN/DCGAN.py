@@ -1,11 +1,21 @@
 '''
+DCGAN - Deep Convolutional Generative Adversarial Network
 kombinieren von Generator und Discriminator
 sowie trainieren des GANs
 '''
+import tensorflow as tf
 
 from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import *
 from tensorflow.keras.optimizers import *
+
+# fix CuDnn problem
+gpus = tf.config.experimental.list_physical_devices('GPU')
+if gpus:
+  try:
+    tf.config.experimental.set_virtual_device_configuration(gpus[0], [tf.config.experimental.VirtualDeviceConfiguration(memory_limit=4096)])
+  except RuntimeError as e:
+    print(e)
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -23,9 +33,8 @@ class DCGAN():
         self.channels = 1
         self.img_shape = (self.img_rows, self.img_cols, self.channels)
         self.z_dimension = 100
-        lr = 0.0002
-        beta_1 = 0.5
-        optimizer = Adam(lr=lr, beta_1=beta_1)
+        lr = 1e-4
+        optimizer = Adam(lr=lr)
         # BUILD DISCRIMINATOR
         self.discriminator = build_discriminator(self.img_shape)
         self.discriminator.compile(
@@ -34,8 +43,9 @@ class DCGAN():
             metrics=["accuracy"]
         )
         # BUILD GENERATOR
-        self.generator = build_generator(self.z_dimension, self.img_shape)
-        z = Input(shape=self.z_dimension,) # generiert 100 zufällige Werte 
+        self.generator = build_generator(self.z_dimension, self.channels)
+        # The generator takes noise as input and generate imgs
+        z = Input(shape=(self.z_dimension,)) # generiert 100 zufällige Werte 
         img = self.generator(z) # erzeugt Bild
         self.discriminator.trainable = False # während Generator trainiert wird darf Discriminator nicht trainiert werden
         d_pred = self.discriminator(img) # Real oder Fake
@@ -95,5 +105,5 @@ class DCGAN():
 
 
 if __name__ == '__main__':
-    dcgan = GAN()
+    dcgan = DCGAN()
     dcgan.train(epochs=200000, batch_size=32, sample_interval=1000)
