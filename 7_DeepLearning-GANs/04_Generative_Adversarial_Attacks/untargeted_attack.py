@@ -36,7 +36,7 @@ def adversarial_noise(model, image, label):
 if __name__ == "__main__":
     cnn = build_cnn()
 
-    lr = 0.0005
+    lr = 0.0001
     optimizer = Adam(lr=lr)
     cnn.compile(
         loss="categorical_crossentropy", 
